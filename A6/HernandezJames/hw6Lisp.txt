@@ -1,0 +1,88 @@
+;;;  #1 removeNILTop
+;;; 	L - List passed in
+;;;     first cond checks if L is empty or NULL
+;;;     second equal returns first item from list and recursively
+;;;     calls to check if the item after the first is empty or NULL
+;;;     if true returns a new list with car L and cdr being new list
+
+(defun ReverseTop (L)
+	(cond 	( (NULL L) NIL )
+		((append (ReverseTop (cdr L)) (list (car L))))
+	)
+)
+
+;;; ReverseAll
+;;;		L - List passed in
+;;;     condition checks if list is NULL
+;;;     if not reverse the list and append to new list
+
+(defun ReverseAll (L)
+	(cond 	( (NULL L) NIL )
+		( (NOT (ATOM (CAR L))) (append (ReverseAll (cdr L)) (list (ReverseAll (car L)))) )
+		( T (append(ReverseAll (cdr L)) (list (car L))))
+	)
+)
+
+;;; RemoveNILTop
+;;;		L - List passed in
+;;;     only removes NIL at the top level usinf RemoveNILTop recursively
+
+(defun RemoveNILTop (L)
+	(cond ( (NULL L) NIL)
+	      ( (equal (car L) NIL) (RemoveNILTop (cdr L)))
+	      ( T  (cons (car L) (RemoveNILTop (cdr l))))
+	 )
+)	
+
+;;; RemoveNILMost
+;;;		L - List passed in
+;;;     uses RemoveNILMost recursively to remove and NIL objects in the list
+
+(defun RemoveNILMost (L)
+	(cond 	( (NULL L) NIL )	      	
+		( ( NULL ( NOT (car L))) 
+		( cons 	(cond 	( ( NOT(ATOM (car L)) ) (RemoveNILMost( car L)) )
+				( T	(car L)) )
+		( RemoveNILMost (cdr L))) )
+		( T 	(RemoveNILMost (cdr L)) )	
+	)	
+)
+
+;;; palindrome
+;;;		L - List passed in
+;;;     uses reverseTop to check and returns T if true
+
+(defun palindrome (L)
+	(cond 	( ( NULL L) NIL) )
+		( equal L (ReverseTop L) )
+)
+
+;;; MEMALL
+;;;		   atm - checks if ATOM in list
+;;;        L - List passed in
+
+(defun MEMALL (atm L)
+	(cond 	( (NULL L ) NIL )
+		( (ATOM L) (EQL atm L)) 
+		( (NULL (CAR L))) 
+		( T	(OR (MEMALL atm (CAR L) )
+			    (MEMALL atm (CDR L) ) ) )
+	)
+)
+
+;;; RemoveNILALL
+;;;			L - list of items
+;;;         NIL items are removed if found
+;;;			MEMALL checks for NIL within L
+
+(defun RemoveNILALL (L)
+	(cond 	( (NULL L) NIL )
+		( (MEMALL NIL L) (RemoveNILALL (removeNILMost L)) )
+		( (if 	(NULL 	(cond 	( (NULL L) NIL) 		
+					( (AND (ATOM L) (NOT (NULL L))) )
+					( T	(OR (removeNILALL (car L)) (removeNILALL (cdr L))) )
+				)
+			)
+		T NIL)NIL )(L)
+	)
+)	

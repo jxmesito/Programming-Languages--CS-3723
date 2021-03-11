@@ -1,0 +1,171 @@
+[1]> (load "hw6Lisp.txt" :echo T :print T)
+;; Loading file hw6Lisp.txt ...
+;;;  #1 removeNILTop
+;;;     L - List passed in
+;;;     first cond checks if L is empty or NULL
+;;;     second equal returns first item from list and recursively
+;;;     calls to check if the item after the first is empty or NULL
+;;;     if true returns a new list with car L and cdr being new list
+
+(defun ReverseTop (L)
+        (cond   ( (NULL L) NIL )
+                ((append (ReverseTop (cdr L)) (list (car L))))
+        )
+)
+REVERSETOP
+
+
+;;; ReverseAll
+;;;             L - List passed in
+;;;     condition checks if list is NULL
+;;;     if not reverse the list and append to new list
+
+(defun ReverseAll (L)
+        (cond   ( (NULL L) NIL )
+                ( (NOT (ATOM (CAR L))) (append (ReverseAll (cdr L)) (list (ReverseAll (car L)))) )
+                ( T (append(ReverseAll (cdr L)) (list (car L))))
+        )
+)
+REVERSEALL
+
+
+;;; RemoveNILTop
+;;;             L - List passed in
+;;;     only removes NIL at the top level usinf RemoveNILTop recursively
+
+(defun RemoveNILTop (L)
+        (cond ( (NULL L) NIL)
+              ( (equal (car L) NIL) (RemoveNILTop (cdr L)))
+              ( T  (cons (car L) (RemoveNILTop (cdr l))))
+         )
+)
+REMOVENILTOP
+
+
+;;; RemoveNILMost
+;;;             L - List passed in
+;;;     uses RemoveNILMost recursively to remove and NIL objects in the list
+
+(defun RemoveNILMost (L)
+        (cond   ( (NULL L) NIL )
+                ( ( NULL ( NOT (car L)))
+                ( cons  (cond   ( ( NOT(ATOM (car L)) ) (RemoveNILMost( car L)) )
+                                ( T     (car L)) )
+                ( RemoveNILMost (cdr L))) )
+                ( T     (RemoveNILMost (cdr L)) )
+        )
+)
+REMOVENILMOST
+
+
+;;; palindrome
+;;;             L - List passed in
+;;;     uses reverseTop to check and returns T if true
+
+(defun palindrome (L)
+        (cond   ( ( NULL L) NIL) )
+                ( equal L (ReverseTop L) )
+)
+PALINDROME
+
+
+;;; MEMALL
+;;;                atm - checks if ATOM in list
+;;;        L - List passed in
+
+(defun MEMALL (atm L)
+        (cond   ( (NULL L ) NIL )
+                ( (ATOM L) (EQL atm L))
+                ( (NULL (CAR L)))
+                ( T     (OR (MEMALL atm (CAR L) )
+                            (MEMALL atm (CDR L) ) ) )
+        )
+)
+MEMALL
+
+
+;;; RemoveNILALL
+;;;                     L - list of items
+;;;         NIL items are removed if found
+;;;                     MEMALL checks for NIL within L
+
+(defun RemoveNILALL (L)
+        (cond   ( (NULL L) NIL )
+                ( (MEMALL NIL L) (RemoveNILALL (removeNILMost L)) )
+                ( (if   (NULL   (cond   ( (NULL L) NIL)
+                                        ( (AND (ATOM L) (NOT (NULL L))) )
+                                        ( T     (OR (removeNILALL (car L)) (removeNILALL (cdr L))) )
+                                )
+                        )
+                T NIL)NIL )(L)
+        )
+)
+REMOVENILALL
+
+;; Loaded file hw6Lisp.txt
+T
+[2]> (load "hw6LispRun.txt" :echo T :print T)
+;; Loading file hw6LispRun.txt ...
+(removeNILTop '(NIL X NIL NIL Y  NIL Z))
+(X Y Z)
+
+(removeNILTop '(X NIL Y NIL Z NIL))
+(X Y Z)
+
+(removeNILTop '(NIL (X NIL Y) (NIL NIL)))
+((X NIL Y) (NIL NIL))
+
+
+(removeNILMost '(NIL X NIL NIL Y  NIL Z))
+(X Y Z)
+
+(removeNILMost '(X NIL (Y NIL Z) NIL))
+(X (Y Z))
+
+(removeNILMost '(NIL (NIL) (X NIL Y) (NIL NIL) Z))
+(NIL (X Y) NIL Z)
+
+(removeNILMost '(NIL ( (((((NIL) NIL)))))))
+((((((NIL))))))
+
+
+(reverseTop '(X Y Z))
+(Z Y X)
+
+(reverseTop '(X (Y Z (A)) (W)))
+((W) (Y Z (A)) X)
+
+
+(reverseAll '(X Y Z))
+(Z Y X)
+
+(reverseAll '(X (Y Z (A)) (W)))
+((W) ((A) Z Y) X)
+
+
+(palindrome '(R A C E C A R))
+T
+
+(palindrome '(W A S I T A C A R O R A C A T I S A W))
+T
+
+(palindrome '(N I X O N) )
+NIL
+
+;; Loaded file hw6LispRun.txt
+T
+[3]> (load "hw6LispExtraRun.txt" :echo T :print T)
+;; Loading file hw6LispExtraRun.txt ...
+(removeNILAll '(NIL (NIL) (X NIL Y) (NIL NIL) Z))
+((X Y) Z)
+
+(removeNILAll '(NIL ( (((((NIL) NIL)))))))
+NIL
+
+(removeNILAll '(NIL (X (NIL) Y) ((NIL)) ))
+((X Y))
+
+(removeNILAll '(NIL (((X ((((((((((NIL)))))))))) Y) Z) W) (((NIL))) ))
+((((X Y) Z) W))
+;; Loaded file hw6LispExtraRun.txt
+T
