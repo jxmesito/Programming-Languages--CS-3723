@@ -1,4 +1,4 @@
-# Programming-Languges--CS-3723
+# Programming-Languages--CS-3723
 
 - Assignment 1 - Memory Sizes
 - Assignment 2 - Heap
